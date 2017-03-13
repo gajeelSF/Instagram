@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Parse
 
 class LoginViewController: UIViewController {
 
@@ -16,7 +17,6 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         // Do any additional setup after loading the view.
     }
 
@@ -26,9 +26,31 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func onSignIn(_ sender: Any) {
+        PFUser.logInWithUsername(inBackground: usernameField.text!, password: passwordField.text!) { (user, error) in
+            if(user != nil) {
+                print("logged in")
+              self.performSegue(withIdentifier: "SignInSegue", sender: nil)
+            }
+            
+        }
+        
     }
 
     @IBAction func onSignUp(_ sender: Any) {
+        let newUser = PFUser()
+        
+        newUser.username = usernameField.text
+        newUser.password = passwordField.text
+        
+        newUser.signUpInBackground { (success, error) in
+            if(success) {
+                print("created a user")
+                self.performSegue(withIdentifier: "SignInSegue", sender: nil)
+            }
+            else {
+                print(error?.localizedDescription)
+            }
+        }
     }
     /*
     // MARK: - Navigation

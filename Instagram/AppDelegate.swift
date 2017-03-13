@@ -14,7 +14,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
@@ -25,6 +24,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 configuration.server = "https://superultimateparsing.herokuapp.com/parse"
             })
         )
+        
+        window = UIWindow(frame: UIScreen.main.bounds)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        
+        
+        let homeNavigationController = storyboard.instantiateViewController(withIdentifier: "HomeNavigationController")
+        homeNavigationController.tabBarItem.title = "home"
+        
+        let composeNavigationController = storyboard.instantiateViewController(withIdentifier: "ComposeNavigationController")
+        composeNavigationController.tabBarItem.title = "compose"
+        let tabBarController = UITabBarController()
+        tabBarController.viewControllers = [homeNavigationController, composeNavigationController]
+        
+        
+       
+        if(PFUser.current() != nil) {
+            print("have current user")
+            window?.rootViewController = tabBarController
+        }
+        else {
+            print("don't have current user")
+            let vc = storyboard.instantiateInitialViewController()
+            window?.rootViewController = vc
+        }
         
         return true
     }
